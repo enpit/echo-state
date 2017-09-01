@@ -1,0 +1,30 @@
+{
+  "name": "echo-state",
+  "version": "0.1.0",
+  "description": "Tiny state management helper for Amazon Alexa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "https://github.com/enpit/echo-state/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/enpit/echo-state.git"
+  },
+  "keywords": [
+    "Echo",
+    "Alexa",
+    "State",
+    "Hierarchy"
+  ],
+  "author": {
+    "name": "Peter Steinberg",
+    "email": "objectliteral@outlook.com",
+    "url": "https://github.com/objectliteral"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enpit/echo-state/issues"
+  },
+  "readmeFilename": "README.md"
+}
