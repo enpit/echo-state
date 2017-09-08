@@ -1,87 +1,107 @@
-var CreateStateHandler = function (state, obj = {}){
+var createStateHandler,
+    StateStore;
+
+/* this function replaces the "official" api call `Alexa.CreateStateHandler(state.name, state.handlers);` because the library function mutates the handlers object and at this point I am not sure, whether this might potentially cause issues. */
+createStateHandler = function (state, obj = {}) {
 
     var target;
 
     target = Object.assign({}, obj);
 
     Object.defineProperty(target, 'STATE', {
-        value: state || ''
+        "value": state || ''
     });
 
     return target;
+
 };
 
-var StateStore = function (separator = '->') {
+StateStore = function (separator = '->') {
 
-    var states = {};
+    var addHandler,
+        create,
+        createState,
+        createSubState,
+        getHandlers,
+        getState,
+        getStates,
+        states = {};
 
-    var create = function (...args) {
+    create = function (...args) {
+
+        var result;
+
         if (args.length === 3) {
-            return createSubState(...args);
+            result = createSubState(...args);
         } else if (args.length === 2) {
             if (typeof args[1] === 'string') {
-                return createSubState(args[0], args[1], {});
+                result = createSubState(args[0], args[1], {});
             } else {
-                return createState(...args);
+                result = createState(...args);
             }
         } else if (args.length === 1) {
-            return createState(args[0], {});
+            result = createState(args[0], {});
         }
+
+        return result;
     };
 
-    var createState = function (name, handlers) {
+    createState = function (name, handlers) {
         return createSubState(name, null, handlers);
     };
 
-    var createSubState = function (name, superstate, handlers) {
+    createSubState = function (name, superstate, handlers) {
 
-        var state = {};
+        var ssHandlers,
+            ssName,
+            ssObject,
+            state = {};
+
         state.superstate = superstate;
 
-        if (superstate !== null) {
+        if (superstate === null) {
 
-            var ss_handlers,
-                ss_name;
-
-            if (typeof superstate === 'string') {
-
-                ss_object = getState(superstate);
-
-                if (typeof ss_object === 'undefined') {
-                    throw new Error('Superstate ' + superstate + ' does not exist.')
-                }
-
-                ss_handlers = ss_object.handlers;
-                ss_name = ss_object.name;
-            } else if (typeof superstate === 'object') {
-                ss_handlers = superstate.handlers;
-                ss_name = superstate.name;
-            }
-
-            state.name = ss_name + separator + name;
-            state.handlers = Object.assign({}, ss_handlers, handlers);
-
-        } else {
-            
             state.name = name;
             state.handlers = Object.assign({}, handlers);
 
+        } else {
+
+            if (typeof superstate === 'string') {
+
+                ssObject = getState(superstate);
+
+                if (typeof ssObject === 'undefined') {
+                    throw new Error('Superstate ' + superstate + ' does not exist.');
+                }
+
+                ssHandlers = ssObject.handlers;
+                ssName = ssObject.name;
+            } else if (typeof superstate === 'object') {
+                ssHandlers = superstate.handlers;
+                ssName = superstate.name;
+            }
+
+            state.name = ssName + separator + name;
+            state.handlers = Object.assign({}, ssHandlers, handlers);
+        
         }
 
         states[state.name] = state;
 
-        state.handlers = CreateStateHandler(state.name, state.handlers); // this call replaces the "official" api call `Alexa.CreateStateHandler(state.name, state.handlers);` because the library function mutates the handlers object and at this point I am not sure, whether this might potentially cause issues.
+        state.handlers = createStateHandler(state.name, state.handlers);
 
         return state;
 
     };
 
-    var getState = function (name) {
+    getState = function (name) {
 
-        var matches = Object.keys(states).filter( (state) => state.match(new RegExp(name + '$')) );
+        var matches = Object.keys(states).filter((state) => state.match(new RegExp(name + '$')));
 
         if (matches.length > 1) {
-            throw new Error('Multiple states match the search string ' + name + '. Unable to uniquely identify the correct state.');
+            throw new Error('Multiple states match the search string '
+            + name
+            + '. Unable to uniquely identify the correct state.');
         } else if (matches.length === 0) {
             throw new Error('No state matching the search string ' + name + '.');
         } else {
@@ -90,25 +110,29 @@ var StateStore = function (separator = '->') {
 
     };
 
-    var getStates = function () {
+    getStates = function () {
         return states;
     };
 
-    var addHandler = function (state, name, handler) {
+    addHandler = function (state, name, handler) {
         
+        var localState;
+
         if (typeof state === 'string') {
-            states[state].handlers[name] = handler;
+            localState = states[state];
+            localState.handlers[name] = handler;
         } else if (typeof state === 'object') {
+            localState = states[state.name];
             if (typeof state.handlers === 'undefined') {
-                state.handlers = {};
+                localState.handlers = {};
             }
-            state.handlers[name] = handler;
+            localState.handlers[name] = handler;
         }
 
     };
 
-    var getHandlers = function (state) {
-        return Object.keys(states).map( (k) => states[k].handlers );
+    getHandlers = function () {
+        return Object.keys(states).map((key) => states[key].handlers);
     };
 
     return {

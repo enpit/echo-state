@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var gulp = require('gulp'),
 uglify = require('gulp-uglify'),
 eslint = require('gulp-eslint'),
