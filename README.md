@@ -40,6 +40,8 @@ That's it basically. You can create a hierarchy of states and by default, states
 
 You can access states using `getState('root->child')` or `getState('child')` if there is only one state with that name. The search string is matched against the longest matching state "path". The `->` notation can be configured to be something else when instantiating the store with something like `new StateStore('.')`.
 
+You also have to register the state handlers by calling `alexa.registerHandlers( ...(states.getHandlers()) );`.
+
 ## Contributing
 
 If you feel like adding functionality or tests or suggestions to this library, feel free to do so!
