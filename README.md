@@ -11,6 +11,8 @@ Since we did not bother to publish to npm, you have to run
 
 ## Usage
 
+echo-state exposes a really simple API that let's you interact with a hierarchy of application states.
+
 ```javascript
 
 // create a new instance of the StateStore
@@ -57,11 +59,11 @@ store.getState('mystate').addHandler({
 
 ## Contributing
 
-*If you feel like adding functionality or tests or suggestions to this library, feel free to do so! 🙂*
+**If you feel like adding functionality or tests or suggestions to this library, feel free to do so!** 🙂
 
 For your implemented features, send us a PR, for requests and discussions, open up an issue. We are happy to answer questions, listen to feedback and talk about suggestions for additional features.
 
 ## License
 
 The MIT License (MIT)
-Copyright © 2017 enpit GmbH & Co. KG
+Copyright © 2017-2018 enpit GmbH & Co. KG
