@@ -4,7 +4,10 @@ This is a tiny library that contains some useful functionality when dealing with
 
 ## Installation
 
-Since we did not bother to publish to npm yet, you have to run `npm install git+https://github.com/enpit/echo-state.git` and then you can `echostate = require('echo-state')`.
+Since we did not bother to publish to npm, you have to run 
+
+- `npm install git+https://github.com/enpit/echo-state.git`
+- and then you can `require('echo-state')`.
 
 ## Usage
 
@@ -13,7 +16,7 @@ Since we did not bother to publish to npm yet, you have to run `npm install git+
 // create a new instance of the StateStore
 var store = new StateStore();
 
-// create a state and define an intent handler
+// create a state and define intent handlers
 var rootState = store.create('root', {
 
 	HelpIntent: function () {
@@ -36,15 +39,27 @@ var childState = store.create('child', 'root', {
 });
 ```
 
-That's it basically. You can create a hierarchy of states and by default, states inherit handlers from their parents. That is useful because then you don't need to redefine basic intents again and again.
+That's it basically. You can create a hierarchy of states and by default, states inherit handlers from their parents.
+
+**You still have to register the state handlers by calling `alexa.registerHandlers( ...(store.getHandlers()) );`.**
 
 You can access states using `getState('root->child')` or `getState('child')` if there is only one state with that name. The search string is matched against the longest matching state "path". The `->` notation can be configured to be something else when instantiating the store with something like `new StateStore('.')`.
 
-You also have to register the state handlers by calling `alexa.registerHandlers( ...(states.getHandlers()) );`.
+To add handlers to an existing state, you can call a state's `addHandler` method:
+
+```javascript
+store.getState('mystate').addHandler({
+	Unhandled: function () {
+		// ...
+	}
+});
+```
 
 ## Contributing
 
-If you feel like adding functionality or tests or suggestions to this library, feel free to do so!
+*If you feel like adding functionality or tests or suggestions to this library, feel free to do so! 🙂*
+
+For your implemented features, send us a PR, for requests and discussions, open up an issue. We are happy to answer questions, listen to feedback and talk about suggestions for additional features.
 
 ## License
 
