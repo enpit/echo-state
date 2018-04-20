@@ -1,6 +1,6 @@
 {
   "name": "echo-state",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Tiny state management helper for Amazon Alexa",
   "main": "index.js",
   "scripts": {

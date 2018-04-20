@@ -131,6 +131,14 @@ StateStore = function (separator = '->') {
 
     };
 
+    addHandlers = function (state, handlers) {
+            
+        for (var i in handlers) {
+            addHandler(state, i, handlers[i]);
+        }
+
+    };
+
     getHandlers = function () {
         return Object.keys(states).map((key) => states[key].handlers);
     };
@@ -142,7 +150,8 @@ StateStore = function (separator = '->') {
         getState,
         getStates,
         getHandlers,
-        addHandler
+        addHandler,
+        addHandlers
     };
 
 };
